@@ -144,7 +144,7 @@ void test_triple_stage() {
 class AutoResetter : public I_DownCounting {
 public:
     bool is_counting() const { return true; }
-    void step() override {/*empty*/}
+    void step() {/*empty*/}
 };
 
 void test_auto_resetter() {

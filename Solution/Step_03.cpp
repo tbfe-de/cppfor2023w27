@@ -113,9 +113,10 @@ void runChessClock()
                     case GameState::WhiteDraw:
                         theGameState = GameState::WhitePaused;
                         break;
+                    default: ;//avoid warning
                     }
                     break;
-                case 'c': // coninue game
+                case 'c': // continue game
                     if (not (theGameState == GameState::BlackPaused)
                          || (theGameState == GameState::WhitePaused))
                         continue;
@@ -126,6 +127,7 @@ void runChessClock()
                     case GameState::WhitePaused:
                         theGameState = GameState::WhiteDraw;
                         break;
+                    default: ;//avoid warning
                     }
                     break;
                         break;
@@ -140,6 +142,7 @@ void runChessClock()
                     case GameState::WhiteDraw:
                         theGameState = GameState::BlackDraw;
                         break;
+                    default: ;//avoid warning
                     }
                     break;
                 // the following commands are used to advance the clock of

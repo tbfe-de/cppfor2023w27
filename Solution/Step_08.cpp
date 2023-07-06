@@ -249,6 +249,7 @@ void runChessClock()
                     case GameState::WhiteDraw:
                         theGameState = GameState::WhitePaused;
                         break;
+                    default: ;//avoid warning
                     }
                     break;
                 case 'c': // continue paused game
@@ -262,6 +263,7 @@ void runChessClock()
                     case GameState::WhitePaused:
                         theGameState = GameState::WhiteDraw;
                         break;
+                    default: ;//avoid warning
                     }
                     break;
                 case 'x':
@@ -275,6 +277,7 @@ void runChessClock()
                     case GameState::WhiteDraw:
                         theGameState = GameState::BlackDraw;
                         break;
+                    default: ;//avoid warning
                     }
                     break;
                 case '9': ticksToSimulate += 72'000; [[fallthrough]]; // (3 hours)
