@@ -250,6 +250,20 @@ void runChessClock()
          || std::isdigit(command)
          || (command == '?')
          || (command == '.'))  {
+            std::cout << "B:" << blackPlayerClock
+                      << ((theGameState == GameState::BlackDraw) ? "*" : " ")
+                      << "| "
+                      << "W:" << whitePlayerClock
+                      << ((theGameState == GameState::WhiteDraw) ? "*" : " ")
+                      << std::endl;
+            switch (theGameState) {
+            case GameState::BlackWins:
+                std::cout << "!! Black Player Won !!" << std::endl;
+                break;
+            case GameState::WhiteWins:
+                std::cout << "!! White Player Won !!" << std::endl;
+                break;
+            }
             std::cout << "===> " << command << std::endl;
             int ticksToSimulate{};
             switch(command) {
@@ -346,20 +360,6 @@ void runChessClock()
                 case '.':
                     std::cout << "Thanks for using the Chess-Clock" << std::endl;
                     return;
-            }
-            std::cout << "B:" << blackPlayerClock
-                      << ((theGameState == GameState::BlackDraw) ? "*" : " ")
-                      << "| "
-                      << "W:" << whitePlayerClock
-                      << ((theGameState == GameState::WhiteDraw) ? "*" : " ")
-                      << std::endl;
-            switch (theGameState) {
-            case GameState::BlackWins:
-                std::cout << "!! Black Player Won !!" << std::endl;
-                break;
-            case GameState::WhiteWins:
-                std::cout << "!! White Player Won !!" << std::endl;
-                break;
             }
         }
     }

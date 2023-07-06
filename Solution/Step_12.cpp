@@ -211,7 +211,7 @@ enum class GameState {
     WhiteWins, BlackWins
 };
 
-void runChessClock()
+void runChessClock(std::ostream& clkout)
 {
     Clock blackPlayerClock{};
     Clock whitePlayerClock{};
@@ -223,6 +223,21 @@ void runChessClock()
          || std::isdigit(command)
          || (command == '?')
          || (command == '.'))  {
+            clkcout << "B:" << blackPlayerClock
+                      << ((theGameState == GameState::BlackDraw) ? "*" : " ")
+                      << "| "
+                      << "W:" << whitePlayerClock
+                      << ((theGameState == GameState::WhiteDraw) ? "*" : " ")
+                      << std::endl;
+            switch (theGameState) {
+            case GameState::BlackWins:
+                clkout << "!! Black Player Won !!" << std::endl;
+                break;
+            case GameState::WhiteWins:
+                std::cout << "!! White Player Won !!" << std::endl;
+                break;
+            default: ;//avoid warning
+            }
             std::cout << "===> " << command << std::endl;
             int ticksToSimulate{};
             switch(command) {
@@ -323,28 +338,22 @@ void runChessClock()
                     std::cout << "Thanks for using the Chess-Clock" << std::endl;
                     return;
             }
-            std::cout << "B:" << blackPlayerClock
-                      << ((theGameState == GameState::BlackDraw) ? "*" : " ")
-                      << "| "
-                      << "W:" << whitePlayerClock
-                      << ((theGameState == GameState::WhiteDraw) ? "*" : " ")
-                      << std::endl;
-            switch (theGameState) {
-            case GameState::BlackWins:
-                std::cout << "!! Black Player Won !!" << std::endl;
-                break;
-            case GameState::WhiteWins:
-                std::cout << "!! White Player Won !!" << std::endl;
-                break;
-            default: ;//avoid warning
-            }
         }
     }
 }
 
-int main()
+#include <fstream>
+#include <string>
+int main(int argc, char *argv[])
 {
-    runChessClock();
+    std::ofstream clock_display{};
+    if ((argc == 2)
+     && std::string{argv[1]}.starts_with("/dev/tty")) {
+        clock_display.open(argv[1]);
+        if (clock_display)
+            clock_display << "*** CHESS CLOCK DISPLAY ***\n";
+    }
+    runChessClock(clock_display ? clock_display : std::cout);
 }
 
 #endif
