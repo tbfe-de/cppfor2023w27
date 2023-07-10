@@ -136,6 +136,19 @@ bool Clock::operator-=(int steps) {
 #include <future>
 #include <thread>
 
+// TBD: review the class `ClockWork` below, which is meant to run
+// either (or none) of the PlayerClocks. It still ha a number of
+// shortcomings but is complete to the degree that it can run
+// the player clocks;
+// --- optional part ---
+// can you recognize some of the problems caused by the simplicity
+// of this code?
+
+// Now Scroll down to the conditionally compiled main program and
+// see how you may proceed to better understand what the program
+// doesn
+// class is meant to be used
+
 class ClockWork {
     bool stopping_{};
     std::function<void()> subscriber_{};
@@ -193,7 +206,7 @@ int main() {
     std::cin.get();
     cw.attach(nullptr);
 
-    std::cout << "... return to stop clockwork ";
+    std::cout << "... hit return to stop clockwork ";
     std::cin.get();
     cw.stop();
 
@@ -216,6 +229,24 @@ void runChessClock(std::ostream& clkout)
     Clock blackPlayerClock{};
     Clock whitePlayerClock{};
     auto theGameState{GameState::Initial};
+
+    auto showGameState = [&]{
+        clkout << "B:" << blackPlayerClock
+                    << ((theGameState == GameState::BlackDraw) ? "*" : " ")
+                    << "| "
+                    << "W:" << whitePlayerClock
+                    << ((theGameState == GameState::WhiteDraw) ? "*" : " ")
+                    << std::endl;
+        switch (theGameState) {
+        case GameState::BlackWins:
+            clkout << "!! Black Player Won !!" << std::endl;
+            break;
+        case GameState::WhiteWins:
+            std::cout << "!! White Player Won !!" << std::endl;
+            break;
+        default: ;//avoid warning
+        }
+    };
     char command;
     while (std::cin.get(command)) {
         command = std::tolower(command);
@@ -223,21 +254,6 @@ void runChessClock(std::ostream& clkout)
          || std::isdigit(command)
          || (command == '?')
          || (command == '.'))  {
-            clkcout << "B:" << blackPlayerClock
-                      << ((theGameState == GameState::BlackDraw) ? "*" : " ")
-                      << "| "
-                      << "W:" << whitePlayerClock
-                      << ((theGameState == GameState::WhiteDraw) ? "*" : " ")
-                      << std::endl;
-            switch (theGameState) {
-            case GameState::BlackWins:
-                clkout << "!! Black Player Won !!" << std::endl;
-                break;
-            case GameState::WhiteWins:
-                std::cout << "!! White Player Won !!" << std::endl;
-                break;
-            default: ;//avoid warning
-            }
             std::cout << "===> " << command << std::endl;
             int ticksToSimulate{};
             switch(command) {
@@ -338,6 +354,7 @@ void runChessClock(std::ostream& clkout)
                     std::cout << "Thanks for using the Chess-Clock" << std::endl;
                     return;
             }
+            showGameState();
         }
     }
 }
@@ -348,12 +365,15 @@ int main(int argc, char *argv[])
 {
     std::ofstream clock_display{};
     if ((argc == 2)
-     && std::string{argv[1]}.starts_with("/dev/tty")) {
+     && std::string{argv[1]}.find("/dev/tty") == 0) {
         clock_display.open(argv[1]);
-        if (clock_display)
+        if (clock_display) {
+            std::cout << "CLOCK DISPLAY: " << argv[1] << std::endl;
             clock_display << "*** CHESS CLOCK DISPLAY ***\n";
+        }
     }
     runChessClock(clock_display ? clock_display : std::cout);
+    //runChessClock(std::cout);
 }
 
 #endif

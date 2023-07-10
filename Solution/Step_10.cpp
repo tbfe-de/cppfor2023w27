@@ -11,7 +11,7 @@
 constexpr int InitialTime{30*60*10};
 
 class BaseDownCounter {
-protected:
+private:
     int value_{};
     const int reset_{};
     virtual bool chained_is_counting() const { return false; }
